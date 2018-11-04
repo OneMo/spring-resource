@@ -10,7 +10,8 @@ import org.springframework.stereotype.Controller;
 
 
 @ComponentScan(value = "com.wdfu",includeFilters = {
-        @ComponentScan.Filter(type = FilterType.ANNOTATION,classes = {Controller.class})
+        @ComponentScan.Filter(type = FilterType.ANNOTATION,classes = {Controller.class}),
+        @ComponentScan.Filter(type = FilterType.CUSTOM,classes = {MyTypeFilter.class})
 },useDefaultFilters = false)
 public class MainConfig {
 
