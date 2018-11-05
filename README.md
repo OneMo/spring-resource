@@ -40,15 +40,14 @@ spring源码学习
 	遍历得到容器中所有的BeanPostProcessor，挨个执行postProcessBeforeInitialization，一旦返回null 则跳出for循环  源代码见	
 	AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization()
 	调用的生命周期：
-                        ......对bean进行属性的赋值等操作
-                        initializeBean：{
-                                    //调用初始化之前的方法
-                        			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
-                        			//调用初始化方法
-			                        invokeInitMethods(beanName, wrappedBean, mbd);
-			                        //调用初始化之后的方法
-			                        wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
-                        }
-                                
-                        
+	 ......对bean进行属性的赋值等操作
+	 initializeBean：
+	 {
+      //调用初始化之前的方法
+      wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
+      //调用初始化方法
+      invokeInitMethods(beanName, wrappedBean, mbd);
+      //调用初始化之后的方法
+      wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);                                      
+     }
 ## 第二部分、                     
