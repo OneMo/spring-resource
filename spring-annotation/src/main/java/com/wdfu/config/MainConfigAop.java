@@ -55,6 +55,33 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  *      AnnotationAwareAspectJAutoProxyCreator.initBeanFactory()
  *
  *
+ *
+ *      流程：
+ *
+ *      1、传入配置类，创建IOC容器
+ *      2、注册配置类，调用refresh()刷新容器
+ *      3、registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) 注册bean的后置处理器来方便拦截bean的创建
+ *          1）、先获取IOC容器已经定义了的需要创建对象的所有BeanPostProcessor
+ *          2）、给容器中加入别的BeanPostProcessor
+ *          3）、优先注册实现了PriorityOrdered接口的BeanPostProcessor
+ *          4）、在给容器中注册实现了Ordered接口的BeanPostProcessor
+ *          5）、注册没有实现优先级接口的BeanPostProcessor
+ *          6）、注册BeanPostProcessor，实际上就是创建BeanPostProcessor对象，保存在容器中
+ *                 创建org.springframework.aop.config.internalAutoProxyCreator的BeanPostProcessor实际上就是创建AnnotationAwareAspectJAutoProxyCreator对象
+ *                 1）、createBeanInstance(beanName, mbd, args)：创建Bean的实例
+ *                 2）、populateBean(beanName, mbd, instanceWrapper)：给bean的各种属性赋值
+ *                 3）、initializeBean(beanName, exposedObject, mbd)：初始化bean
+ *                      1）、invokeAwareMethods(beanName, bean)：处理Ware接口的回调
+ *                      2）、applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName)：应用后置处理器的beanProcessor.postProcessBeforeInitialization(result, beanName);
+ *                      3）、invokeInitMethods(beanName, wrappedBean, mbd);执行初始化方法
+ *                      4）、applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);执行后置处理器的beanProcessor.postProcessAfterInitialization(result, beanName);
+ *                 4)、BeanPostProcessor（AnnotationAwareAspectJAutoProxyCreator）创建成功
+ *          7）、吧BeanPostProcessor注册到BeanFactory中： beanFactory.addBeanPostProcessor(postProcessor);
+ *
+ *
+ *
+ *
+ *
  */
 @EnableAspectJAutoProxy
 @Configuration
