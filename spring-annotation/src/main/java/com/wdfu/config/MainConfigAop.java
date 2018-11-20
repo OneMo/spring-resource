@@ -30,6 +30,31 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * 1)、将业务逻辑组件和切面类都加入到容器找那个，告诉spring那个是切面类（@Aspect）
  * 2)、在切面类上的每一个通知方法上标注通知注解，告诉spring何时何地运行（切入点表达式）
  * 3)、开启给予注释的aop模式：@EnableAspectJAutoProxy
+ *
+ *
+ * AOP原理：看给容器中注册了什么组件  这个组件什么时候工作 【这个组件工作的时候功能是什么】
+ *      @EnableAspectJAutoProxy
+ * 1、@EnableAspectJAutoProxy是什么？
+ *      @Import(AspectJAutoProxyRegistrar.class)： 给容器中导入AspectJAutoProxyRegistrar
+ *          利用AspectJAutoProxyRegistrar自定义给容器中注册bean：internalAutoProxyCreator(name) = AnnotationAwareAspectJAutoProxyCreator(bean)
+ *          给容器中注册一个AnnotationAwareAspectJAutoProxyCreator(注解自动代理对象器)
+ * 2、AnnotationAwareAspectJAutoProxyCreator 结构关系
+ *          AnnotationAwareAspectJAutoProxyCreator
+ *              -> AspectJAwareAdvisorAutoProxyCreator
+ *                  -> AbstractAdvisorAutoProxyCreator
+ *                      -> AbstractAutoProxyCreator
+ *                          -> implements SmartInstantiationAwareBeanPostProcessor, BeanFactoryAware
+ *                          关注后置处理器BeanPostProcessor(在bean初始化完成前后做的事情)，自动装配BeanFactoryAware
+ *  AbstractAutoProxyCreator类中相关的方法 ：
+ *      AbstractAutoProxyCreator.setBeanFactory(BeanFactory beanFactory)
+ *      AbstractAutoProxyCreator.postProcessBeforeInstantiation(Class<?> beanClass, String beanName)
+ *      AbstractAutoProxyCreator.postProcessAfterInitialization(@Nullable Object bean, String beanName)
+ *  AbstractAdvisorAutoProxyCreator 类中相关的方法：
+ *      AbstractAdvisorAutoProxyCreator.setBeanFactory(BeanFactory beanFactory) ->initBeanFactory()
+ *  AnnotationAwareAspectJAutoProxyCreator  类中相关的方法：
+ *      AnnotationAwareAspectJAutoProxyCreator.initBeanFactory()
+ *
+ *
  */
 @EnableAspectJAutoProxy
 @Configuration
